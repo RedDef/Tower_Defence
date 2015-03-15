@@ -13,7 +13,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp \
-    tower.cpp
+    tower.cpp \
+    game.cpp
 
 HEADERS  += \
-    tower.h
+    tower.h \
+    game.h
+
+RESOURCES += \
+    res.qrc
