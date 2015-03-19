@@ -1,6 +1,7 @@
 #include "game.h"
 #include "tower.h"
 #include "bullet.h"
+#include "enemy.h"
 #include <QGraphicsScene>
 
 Game::Game(): QGraphicsView(){
@@ -21,6 +22,10 @@ Game::Game(): QGraphicsView(){
     setFixedSize(1200,800);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
+    //creat enemy
+    Enemy * enemy = new Enemy();
+    scene->addItem(enemy);
 
 }
 

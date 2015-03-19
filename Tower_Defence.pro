@@ -15,12 +15,14 @@ TEMPLATE = app
 SOURCES += main.cpp \
     tower.cpp \
     game.cpp \
-    bullet.cpp
+    bullet.cpp \
+    enemy.cpp
 
 HEADERS  += \
     tower.h \
     game.h \
-    bullet.h
+    bullet.h \
+    enemy.h
 
 RESOURCES += \
     res.qrc
