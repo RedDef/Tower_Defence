@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QMAKE_CXXFLAGS += -std=c++0x
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -16,13 +17,15 @@ SOURCES += main.cpp \
     tower.cpp \
     game.cpp \
     bullet.cpp \
-    enemy.cpp
+    enemy.cpp \
+    buildtowericon.cpp
 
 HEADERS  += \
     tower.h \
     game.h \
     bullet.h \
-    enemy.h
+    enemy.h \
+    buildtowericon.h
 
 RESOURCES += \
     res.qrc

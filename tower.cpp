@@ -30,6 +30,7 @@ Tower::Tower(QGraphicsItem *parent): QObject(), QGraphicsPixmapItem(parent){
 
     //create QGraphicsPolygonItem
     attack_area = new QGraphicsPolygonItem(QPolygonF(points),this);
+    attack_area->setPen(QPen(Qt::DotLine));
 
     //move the polygon
     QPointF poly_center(1.5,1.5);
@@ -75,7 +76,7 @@ void Tower::aquire_target(){
         return;
     }
 
-    double closest_dist = 1200;
+    double closest_dist = 400;
     QPointF closest_pt = QPointF(0,0);
     for(size_t i = 0, n = colliding_items.size(); i < n; i++){
         Enemy *enemy = dynamic_cast<Enemy *>(colliding_items[i]);

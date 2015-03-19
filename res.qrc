@@ -3,5 +3,6 @@
         <file>tower.png</file>
         <file>arrow.png</file>
         <file>enemy.png</file>
+        <file>towericon.png</file>
     </qresource>
 </RCC>
