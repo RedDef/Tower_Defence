@@ -1,0 +1,4 @@
+Bugs to fix:
+- attack-area, attack enemy only if thy're in range
+- make enemys middle to target --> enemys next position?
+- delet bullets outside the screen

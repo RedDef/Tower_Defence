@@ -43,7 +43,7 @@ Tower::Tower(QGraphicsItem *parent): QObject(), QGraphicsPixmapItem(parent){
     //connect a timer to attack_target
     QTimer * timer = new QTimer();
     connect(timer,SIGNAL(timeout()),this,SLOT(aquire_target()));
-    timer->start(1000);
+    timer->start(100);
 
     //set attack_dest
     attack_dest = QPointF(800,0);

@@ -9,7 +9,7 @@ Enemy::Enemy(QGraphicsItem *parent){
     setPixmap(QPixmap(":/images/enemy.png"));
 
     //set points
-    points << QPointF(200,200) << QPoint(400,200); //move down-right, then right
+    points << QPointF(200,200) << QPointF(400,200) << QPointF(500,0); //move down-right, then right
     point_index = 0;
     dest = points[0];
     rotateToPoint(dest);

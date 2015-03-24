@@ -29,3 +29,6 @@ HEADERS  += \
 
 RESOURCES += \
     res.qrc
+
+DISTFILES += \
+    Notes.txt
