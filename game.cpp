@@ -1,8 +1,10 @@
 #include "game.h"
-#include "tower.h"
+#include "redtower.h"
 #include "bullet.h"
 #include "enemy.h"
-#include "buildtowericon.h"
+#include "buildredtowericon.h"
+#include "buildbluetowericon.h"
+#include "buildgreentowericon.h"
 #include <QGraphicsScene>
 
 Game::Game(): QGraphicsView(){
@@ -14,11 +16,11 @@ Game::Game(): QGraphicsView(){
     setScene(scene);
 
     //create a tower
-    Tower *t = new Tower();
-    t->setPos(250,250);
+    //Tower *t = new Tower();
+    //t->setPos(250,250);
 
     //add the tower to scene
-    scene->addItem(t);
+    //scene->addItem(t);
 
     //set cursor
     cursor = nullptr;
@@ -34,9 +36,18 @@ Game::Game(): QGraphicsView(){
     Enemy * enemy = new Enemy();
     scene->addItem(enemy);
 
-    //create Tower
-    BuildTowerIcon * ic = new BuildTowerIcon();
-    scene->addItem(ic);
+    //create Tower-Icon
+    BuildRedTowerIcon * rt = new BuildRedTowerIcon();
+    BuildGreenTowerIcon * gt = new BuildGreenTowerIcon();
+    BuildBlueTowerIcon * bt = new BuildBlueTowerIcon();
+
+    //move tower icons
+    gt->setPos(x(),y()+50);
+    bt->setPos(x(),y()+100);
+
+    scene->addItem(rt);
+    scene->addItem(gt);
+    scene->addItem(bt);
 
 }
 
@@ -60,6 +71,15 @@ void Game::mouseMoveEvent(QMouseEvent *event){
 
 void Game::mousePressEvent(QMouseEvent *event){
     if(build){
+        //return if cursor is coliding with a tower
+        QList<QGraphicsItem *> items = cursor->collidingItems();
+        for(size_t i=0, n = items.size(); i<n; i++){
+            if(dynamic_cast<Tower *>(items[i])){
+                return;
+            }
+        }
+
+        //otherwise build at the clicked location
         scene->addItem(build);
         build->setPos(event->pos());
         cursor = nullptr;

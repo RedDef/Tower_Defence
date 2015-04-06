@@ -14,7 +14,7 @@ extern Game *game;
 
 Tower::Tower(QGraphicsItem *parent): QObject(), QGraphicsPixmapItem(parent){
     //ste the graphics
-    setPixmap(QPixmap(":/images/tower.png"));
+    //setPixmap(QPixmap(":/images/redtower.png"));
 
     //create points vector
     QVector<QPointF> points;
@@ -39,11 +39,6 @@ Tower::Tower(QGraphicsItem *parent): QObject(), QGraphicsPixmapItem(parent){
     QPointF tower_center(x()+12,y()+12);
     QLineF ln(poly_center,tower_center);
     attack_area->setPos(x()+ln.dx(),y()+ln.dy());
-
-    //connect a timer to attack_target
-    QTimer * timer = new QTimer();
-    connect(timer,SIGNAL(timeout()),this,SLOT(aquire_target()));
-    timer->start(100);
 
     //set attack_dest
     attack_dest = QPointF(800,0);

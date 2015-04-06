@@ -18,14 +18,24 @@ SOURCES += main.cpp \
     game.cpp \
     bullet.cpp \
     enemy.cpp \
-    buildtowericon.cpp
+    buildredtowericon.cpp \
+    redtower.cpp \
+    buildgreentowericon.cpp \
+    greentower.cpp \
+    buildbluetowericon.cpp \
+    bluetower.cpp
 
 HEADERS  += \
     tower.h \
     game.h \
     bullet.h \
     enemy.h \
-    buildtowericon.h
+    buildredtowericon.h \
+    redtower.h \
+    buildgreentowericon.h \
+    greentower.h \
+    buildbluetowericon.h \
+    bluetower.h
 
 RESOURCES += \
     res.qrc

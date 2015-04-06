@@ -6,13 +6,16 @@
 
 Bullet::Bullet(QGraphicsItem *parent){
     //set graphics
-    setPixmap(QPixmap(":/images/arrow.png"));
+    //setPixmap(QPixmap(":/images/redarrow.png"));
 
     //connect a timer to move()
     QTimer *move_timer = new QTimer(this);
     connect(move_timer,SIGNAL(timeout()),this,SLOT(move()));
     move_timer->start(50);
 
+    //initialize values
+    maxRange = 100;
+    distanceTravalled = 0;
 }
 
 void Bullet::move(){

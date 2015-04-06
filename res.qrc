@@ -1,8 +1,15 @@
 <RCC>
     <qresource prefix="/images">
-        <file>tower.png</file>
+        <file>redtower.png</file>
         <file>arrow.png</file>
         <file>enemy.png</file>
-        <file>towericon.png</file>
+        <file>BlueTowerIcon.png</file>
+        <file>GreenTowerIcon.png</file>
+        <file>RedTowerIcon.png</file>
+        <file>bluearrow.png</file>
+        <file>bluetower.png</file>
+        <file>greenarrow.png</file>
+        <file>greentower.png</file>
+        <file>redarrow.png</file>
     </qresource>
 </RCC>
