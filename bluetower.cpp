@@ -7,14 +7,12 @@ extern Game * game;
 
 BlueTower::BlueTower(QGraphicsItem *parent){
     //connect a timer to attack_target
-    QTimer * timer = new QTimer();
-    connect(timer,SIGNAL(timeout()),this,SLOT(aquire_target()));
-    timer->start(1000);
+shoot_speed=20;
 }
 
 void BlueTower::fire(){
     Bullet *bullet = new Bullet();
-    bullet->setPixmap(QPixmap(":/images/bluearrow.png"));
+    bullet->setPixmap(QPixmap(":/images/arrow_blue.png"));
     bullet->setPos(x()+10, y()+10);
 
     QLineF ln(QPointF(x()+12,y()+12),attack_dest);

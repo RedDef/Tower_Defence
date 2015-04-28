@@ -7,9 +7,7 @@ extern Game * game;
 
 GreenTower::GreenTower(QGraphicsItem *parent){
     //connect a timer to attack_target
-    QTimer * timer = new QTimer();
-    connect(timer,SIGNAL(timeout()),this,SLOT(aquire_target()));
-    timer->start(1000);
+shoot_speed=15;
 }
 
 void GreenTower::fire(){
@@ -19,16 +17,16 @@ void GreenTower::fire(){
     Bullet *bullet3 = new Bullet();
 
     //set the graphics
-    bullet1->setPixmap(QPixmap(":/images/greenarrow.png"));
-    bullet2->setPixmap(QPixmap(":/images/greenarrow.png"));
-    bullet3->setPixmap(QPixmap(":/images/greenarrow.png"));
+    bullet1->setPixmap(QPixmap(":/images/arrow_green.png"));
+    bullet2->setPixmap(QPixmap(":/images/arrow_green.png"));
+    bullet3->setPixmap(QPixmap(":/images/arrow_green.png"));
 
     //set position
-    bullet1->setPos(x()+10, y()+10);
-    bullet2->setPos(x()+10, y()+10);
-    bullet3->setPos(x()+10, y()+10);
+    bullet1->setPos(x()+18, y()+18);
+    bullet2->setPos(x()+18, y()+18);
+    bullet3->setPos(x()+18, y()+18);
 
-    QLineF ln(QPointF(x()+12,y()+12),attack_dest);
+    QLineF ln(QPointF(x()+18,y()+18),attack_dest);
     int angle = -1 * ln.angle(); //*(-1) for clockwise rotation
 
     //set angle

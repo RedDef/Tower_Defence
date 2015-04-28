@@ -23,7 +23,14 @@ SOURCES += main.cpp \
     buildgreentowericon.cpp \
     greentower.cpp \
     buildbluetowericon.cpp \
-    bluetower.cpp
+    bluetower.cpp \
+    blacktower.cpp \
+    buildblacktowericon.cpp \
+    whitetower.cpp \
+    buildwhitetowericon.cpp \
+    yellowtower.cpp \
+    buildyellowtowericon.cpp \
+    gridpoint.cpp
 
 HEADERS  += \
     tower.h \
@@ -35,7 +42,14 @@ HEADERS  += \
     buildgreentowericon.h \
     greentower.h \
     buildbluetowericon.h \
-    bluetower.h
+    bluetower.h \
+    blacktower.h \
+    buildblacktowericon.h \
+    whitetower.h \
+    buildwhitetowericon.h \
+    yellowtower.h \
+    buildyellowtowericon.h \
+    gridpoint.h
 
 RESOURCES += \
     res.qrc

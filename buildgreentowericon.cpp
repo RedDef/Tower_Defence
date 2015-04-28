@@ -5,12 +5,12 @@
 extern Game * game;
 
 BuildGreenTowerIcon::BuildGreenTowerIcon(QGraphicsItem *parent):QGraphicsPixmapItem(parent){
-    setPixmap(QPixmap(":/images/GreenTowerIcon.png"));
+    setPixmap(QPixmap(":/images/tower_menu_green.png"));
 }
 
 void BuildGreenTowerIcon::mousePressEvent(QGraphicsSceneMouseEvent *event){
-    if(!game->build){
-        game->build = new GreenTower();
-        game->setCursor(QString(":/images/greentower.png"));
+    if(!game->building){
+        game->building = new GreenTower();
+        game->setCursor(QString(":/images/tower_field_green.png"));
     }
 }

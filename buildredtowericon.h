@@ -1,5 +1,5 @@
-#ifndef BUILDTOWERICON
-#define BUILDTOWERICON
+#ifndef BUILDREDTOWERICON
+#define BUILDREDTOWERICON
 
 #include <QGraphicsPixmapItem>
 #include <QGraphicsSceneMouseEvent>
@@ -10,5 +10,5 @@ public:
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 };
 
-#endif // BUILDTOWERICON
+#endif // BUILDREDTOWERICON
 

@@ -1,15 +1,32 @@
 <RCC>
     <qresource prefix="/images">
-        <file>redtower.png</file>
-        <file>arrow.png</file>
-        <file>enemy.png</file>
-        <file>BlueTowerIcon.png</file>
-        <file>GreenTowerIcon.png</file>
-        <file>RedTowerIcon.png</file>
-        <file>bluearrow.png</file>
-        <file>bluetower.png</file>
-        <file>greenarrow.png</file>
-        <file>greentower.png</file>
-        <file>redarrow.png</file>
+        <file>arrow_black.png</file>
+        <file>arrow_blue.png</file>
+        <file>arrow_green.png</file>
+        <file>arrow_red.png</file>
+        <file>arrow_yellow.png</file>
+        <file>background_field_brown.png</file>
+        <file>background_field_grass.png</file>
+        <file>background_field_green.png</file>
+        <file>background_road.png</file>
+        <file>enemy0.png</file>
+        <file>enemy1.png</file>
+        <file>enemy2.png</file>
+        <file>enemy3.png</file>
+        <file>enemy4.png</file>
+        <file>enemy5.png</file>
+        <file>tower_field_black.png</file>
+        <file>tower_field_blue.png</file>
+        <file>tower_field_green.png</file>
+        <file>tower_field_red.png</file>
+        <file>tower_field_white.png</file>
+        <file>tower_field_yellow.png</file>
+        <file>tower_menu_black.png</file>
+        <file>tower_menu_blue.png</file>
+        <file>tower_menu_green.png</file>
+        <file>tower_menu_red.png</file>
+        <file>tower_menu_white.png</file>
+        <file>tower_menu_yellow.png</file>
+        <file>gridpoint.png</file>
     </qresource>
 </RCC>
