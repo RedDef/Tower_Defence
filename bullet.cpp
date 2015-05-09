@@ -1,6 +1,8 @@
 #include "bullet.h"
 #include "enemy.h"
 #include "game.h"
+#include "score.h"
+#include "health.h"
 #include <QPixmap>
 #include <QTimer>
 #include <qmath.h> //math-functions for angles
@@ -9,26 +11,21 @@
 extern Game * game;
 
 Bullet::Bullet(QGraphicsItem *parent){
-    //set graphics
-    //setPixmap(QPixmap(":/images/redarrow.png"));
 
     //connect a timer to move()
-
     connect(game->move_timer,SIGNAL(timeout()),this,SLOT(move()));
-
 
     //initialize values
     maxRange = 100;
     distanceTravalled = 0;
+    damage_bullet=1;
+    STEP_SIZE = 5;
+    dx=0;
+    dy=0;
 
 }
 
 void Bullet::move(){
-    int STEP_SIZE = 5;
-    double theta = rotation(); //degrees
-
-    double dy = STEP_SIZE * qSin(qDegreesToRadians(theta));
-    double dx = STEP_SIZE * qCos(qDegreesToRadians(theta));
 
     setPos(x()+dx, y()+dy);
 
@@ -44,14 +41,12 @@ void Bullet::move(){
     for (int i = 0, n = colliding_items.size(); i < n; ++i){
         if (typeid(*(colliding_items[i])) == typeid(Enemy)){
 
-            //remove them from the scene (still on the heap)
-            scene()->removeItem(colliding_items[i]);
             scene()->removeItem(this);
+            Enemy *temp_enemy = dynamic_cast<Enemy *>(colliding_items[i]);
+            temp_enemy->hit(damage_bullet);
 
             // delete them from the heap to save memory
-            delete colliding_items[i];
             delete this;
-
 
             // return (all code below refers to a non existent bullet)
             return;

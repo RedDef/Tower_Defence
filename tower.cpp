@@ -17,8 +17,6 @@ extern Game *game;
 
 Tower::Tower(QGraphicsItem *parent): QObject(), QGraphicsPixmapItem(parent){
 
-    //ste the graphics
-    //setPixmap(QPixmap(":/images/redtower.png"));
 
        way_points=game->pointsToFollow;
         connect(game->move_timer,SIGNAL(timeout()),this,SLOT(aquire_target()));
@@ -77,10 +75,13 @@ void Tower::fire(){
     Bullet *bullet = new Bullet();
     bullet->setPos(x()+18, y()+18);
 
-    QLineF ln(QPointF(x()+18,y()+18),attack_dest);
-    int angle = -1 * ln.angle(); //*(-1) for clockwise rotation
+    QPointF temp;
+    double test;
+    temp =(QPointF(x()+18,y())-(attack_dest));
 
-   // bullet->setRotation(angle);
+    bullet->dx = -(bullet->STEP_SIZE)*temp.x()/(sqrt(pow(temp.x(),2)+pow(temp.y(),2)));
+    bullet->dx = -(bullet->STEP_SIZE)*temp.y()/(sqrt(pow(temp.x(),2)+pow(temp.y(),2)));
+
     game->scene->addItem(bullet);
 
 }
@@ -155,7 +156,7 @@ QLineF ln;
         }
         target_pt.setX(target_pt.rx()+18);
         target_pt.setY(target_pt.ry()+18);
-        attack_dest = target_pt;
+        attack_dest = target_pt;    
         fire();
         shoot_wait++;
     }else{

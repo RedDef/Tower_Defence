@@ -30,7 +30,9 @@ SOURCES += main.cpp \
     buildwhitetowericon.cpp \
     yellowtower.cpp \
     buildyellowtowericon.cpp \
-    gridpoint.cpp
+    gridpoint.cpp \
+    health.cpp \
+    score.cpp
 
 HEADERS  += \
     tower.h \
@@ -49,7 +51,9 @@ HEADERS  += \
     buildwhitetowericon.h \
     yellowtower.h \
     buildyellowtowericon.h \
-    gridpoint.h
+    gridpoint.h \
+    health.h \
+    score.h
 
 RESOURCES += \
     res.qrc

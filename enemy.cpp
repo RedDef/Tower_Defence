@@ -1,8 +1,9 @@
 #include "enemy.h"
+#include "game.h"
 #include <QPixmap>
 #include <QTimer>
 #include <qmath.h>
-#include "game.h"
+
 
 extern Game * game;
 
@@ -12,6 +13,7 @@ Enemy::Enemy(QList<QPointF> pointsToFollow, QGraphicsItem *parent){
 
     step_count=0;
     STEP_SIZE=3;
+    health_enemy=10;
 
     //set points
     points = pointsToFollow;
@@ -19,7 +21,6 @@ Enemy::Enemy(QList<QPointF> pointsToFollow, QGraphicsItem *parent){
     dest = points[0];
 
     //connect timer to move_foreward
-
     connect(game->move_timer,SIGNAL(timeout()),this,SLOT(move_foreward()));
 
 
@@ -30,6 +31,21 @@ Enemy::Enemy(QList<QPointF> pointsToFollow, QGraphicsItem *parent){
 void Enemy::rotateToPoint(QPointF p){
     QLineF ln(pos(), p);
     setRotation((ln.angle()));//(-1) turn clockwhise
+}
+
+double Enemy::hit(double damage){
+    health_enemy = health_enemy - damage;
+
+    if (health_enemy <= 0) {
+
+        scene()->removeItem(this);
+
+        // increase Score
+        game->score->increase();
+
+        // delete them from the heap to save memory
+        delete this;
+    }
 }
 
 void Enemy::move_foreward(){
@@ -55,13 +71,16 @@ void Enemy::move_foreward(){
     }
 
     //move enemy foreward at current angle
-
-
-
-
-
-
     setPos(x()+dx, y()+dy);
+
+    //decrease health when reaches finish
+    if(pos().x() > 779){
+        game->health->decrease();
+    }
+
+    // Endposition noch anpassen, damit es nur einmal zählt
+    // momentan io, aber nur solange der x-Wert des Endpunktes nicht verändert wird (594)
+    // und die Enemys wieder zurücklaufen, also übers Spielfeld hinaus
 
 
 }

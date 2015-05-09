@@ -5,6 +5,8 @@
 #include <QMouseEvent>
 #include <QGraphicsPixmapItem>
 #include "tower.h"
+#include "score.h"
+#include "health.h"
 #include <QTimer>
 
 class Game: public QGraphicsView{
@@ -23,6 +25,8 @@ public:
     QGraphicsPixmapItem *cursor;
     Tower * building;
     QTimer * spawnTimer;
+    Score *score;
+    Health *health;
     int enemiesSpawned;
     int maxNumberOfEnemies;
     QList<QPointF> pointsToFollow;

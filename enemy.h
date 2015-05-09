@@ -16,14 +16,14 @@ public:
     double dx;
     double dy;
     int point_index;
-
+    double hit(double damage);
+    double health_enemy;
 public slots:
     void move_foreward();
 private:
     QList<QPointF> points;
     QPointF dest;
     QPointF position;
-
     double theta;
 };
 

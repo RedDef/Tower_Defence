@@ -11,7 +11,7 @@ class Gridpoint: public QObject, public QGraphicsPixmapItem{
 public:
     Gridpoint(QGraphicsItem *parent=0);
     double distanceTo(QGraphicsItem *item);
-
+    bool occupied;
 public slots:
 protected:
 };

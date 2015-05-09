@@ -12,6 +12,7 @@ Gridpoint::Gridpoint(QGraphicsItem *parent): QObject(), QGraphicsPixmapItem(pare
 
     //set the graphics
     setPixmap(QPixmap(":/images/gridpoint.png"));
+    occupied = false;
 
 }
 

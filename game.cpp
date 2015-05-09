@@ -1,6 +1,8 @@
 #include "game.h"
 #include "bullet.h"
 #include "enemy.h"
+#include "score.h"
+#include "health.h"
 #include "gridpoint.h"
 #include "buildredtowericon.h"
 #include "buildbluetowericon.h"
@@ -110,6 +112,14 @@ move_timer = new QTimer(this);
     scene->addItem(yt);
     scene->addItem(wt);
 
+    // create Score Text
+    score = new Score();
+    scene->addItem(score);
+
+    // create Health Text
+    health = new Health();
+    scene->addItem(health);
+
 }
 
 void Game::setCursor(QString filename){
@@ -135,24 +145,45 @@ void Game::mousePressEvent(QMouseEvent *event){
         qDebug() << "if build ";
         //return if cursor is coliding with a tower
         QList<QGraphicsItem *> items = cursor->collidingItems();
+
+        double closest_dist = 5000;
+        bool has_gridpoint=false;
+
+        int closest_gridpoint = 100;
+
+
         for(size_t i=0, n = items.size(); i<n; i++){
-            qDebug() << "for ";
-            Tower *tower = dynamic_cast<Tower *>(items[i]);
-            if(tower){
-                qDebug() << "if ";
-                return;
-            }else{
-                 qDebug() << "else ";
+            Gridpoint *temp_gridpoint = dynamic_cast<Gridpoint *>(items[i]);
+            if(temp_gridpoint){
+                has_gridpoint=true;
+
+                QLineF ln(pos(),items[i]->pos());
+
+                if(ln.length() < closest_dist){
+                    closest_dist = ln.length();
+                    closest_gridpoint = i;
+
+                }
             }
         }
+        if(has_gridpoint){
+            Gridpoint *temp_gridpoint = dynamic_cast<Gridpoint *>(items[closest_gridpoint]);
+            if(temp_gridpoint->occupied==0){
 
-        //otherwise build at the clicked location
-        scene->addItem(building);
-        building->setPos((event->pos().x()-18),(event->pos().y()-18));
-        cursor = nullptr;
-        building = nullptr;
+                temp_gridpoint->occupied=1;
+                scene->addItem(building);
+                building->setPos((temp_gridpoint->pos().x()-12),(temp_gridpoint->pos().y()-12));
+                cursor->setPos((temp_gridpoint->pos().x()-12),(temp_gridpoint->pos().y()-12));
+                cursor = nullptr;
+                building = nullptr;
+            }
+        }
+        has_gridpoint=false;
+        return;
+    }
 
-    }else{
+
+    else{
         QGraphicsView::mousePressEvent(event);
     }
 }

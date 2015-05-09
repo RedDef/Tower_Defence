@@ -28,5 +28,9 @@
         <file>tower_menu_white.png</file>
         <file>tower_menu_yellow.png</file>
         <file>gridpoint.png</file>
+        <file>background_menu_wood.png</file>
+        <file>button_aboutus.png</file>
+        <file>button_go.png</file>
+        <file>button_help.png</file>
     </qresource>
 </RCC>
