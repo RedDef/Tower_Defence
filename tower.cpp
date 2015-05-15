@@ -17,9 +17,7 @@ extern Game *game;
 
 Tower::Tower(QGraphicsItem *parent): QObject(), QGraphicsPixmapItem(parent){
 
-
-       way_points=game->pointsToFollow;
-        connect(game->move_timer,SIGNAL(timeout()),this,SLOT(aquire_target()));
+    connect(game->move_timer,SIGNAL(timeout()),this,SLOT(aquire_target()));
 
 
 
@@ -40,7 +38,6 @@ Tower::Tower(QGraphicsItem *parent): QObject(), QGraphicsPixmapItem(parent){
 
 
     //scale points
-    int SCALE_FACTOR = 100;
     for(size_t i =0, n=points.size(); i<n; i++){
         points[i] = points[i] * SCALE_FACTOR;
     }
@@ -57,26 +54,38 @@ Tower::Tower(QGraphicsItem *parent): QObject(), QGraphicsPixmapItem(parent){
     QLineF ln(poly_center,tower_center);
     attack_area->setPos(x()+ln.dx(),y()+ln.dy());
 
-    //set attack_dest
-    attack_dest = QPointF(800,0);
+
+ //   attack_area->hide();
+
+
+
+    range[0][0]=9999;
+    range[0][1]=9999;
+    range[1][0]=9999;
+    range[1][1]=9999;
+    range[2][0]=9999;
+    range[2][1]=9999;
+    range[3][0]=9999;
+    range[3][1]=9999;
+    range[4][0]=9999;
+    range[4][1]=9999;
+    range[5][0]=9999;
+    range[5][1]=9999;
+    range[6][0]=9999;
+    range[6][1]=9999;
+    range[7][0]=9999;
+    range[7][1]=9999;
+
 
 
 }
 
-
-
-
-double Tower::distanceTo(QGraphicsItem *item){
-    QLineF ln(pos(),item->pos());
-    return ln.length();
-}
 
 void Tower::fire(){
     Bullet *bullet = new Bullet();
     bullet->setPos(x()+18, y()+18);
 
     QPointF temp;
-    double test;
     temp =(QPointF(x()+18,y())-(attack_dest));
 
     bullet->dx = -(bullet->STEP_SIZE)*temp.x()/(sqrt(pow(temp.x(),2)+pow(temp.y(),2)));
@@ -86,92 +95,109 @@ void Tower::fire(){
 
 }
 
-void Tower::aquire_target(){
-  double max_step = 0;
-  double dx=0;
-  double dy=0;
-  double step_size=0;
-
-if(shoot_wait==0){
-
-    //get a list of all items colliding with attack_area
-    QList<QGraphicsItem *> colliding_items = attack_area->collidingItems();
-
-    if(colliding_items.size() == 1){
-        has_target = false;
-        return;
-    }
+void Tower::find_targetpoints()
+{
+    QPointF point_dif;
+    double dif;
+    range_number=0;
 
 
+    bool found_targetpoint=false;
 
-    QPointF target_pt = QPointF(0,0);
-    for(size_t i = 0, n = colliding_items.size(); i < n; i++){
-        Enemy *enemy = dynamic_cast<Enemy *>(colliding_items[i]);
-        if(enemy){
-            double this_step = enemy->step_count;
-            if(this_step > max_step){
-                max_step = this_step;
-                target_pt =enemy->pos();
-                dx=enemy->dx;
-                dy=enemy->dy;
-                step_size= enemy->STEP_SIZE;
-                point_index= enemy->point_index;
-                has_target = true;
+    int n=game->last_waypoint;
+
+    while(n>0){
+        found_targetpoint=false;
+        for(;(n>=0);n--){
+            point_dif=(QPointF(x()+18,y()+18)-game->way_points[n].position_enemy);
+            dif=(sqrt(pow(point_dif.x(),2)+pow(point_dif.y(),2)));
+            dif = (dif - 18-SCALE_FACTOR);
+
+
+            if(dif<=0){
+                found_targetpoint=true;
+                break;
             }
         }
-    }
-double test;
-QLineF ln2;
-QLineF ln;
-
-    //just fire on targets, not on towers
-    if(has_target){
-        double dif=999;
-        double dif_old=1000;
-        for(int i=0;(dif>2)&&(dif_old>dif);i++){
-            dif_old=dif;
-
-            ln.setPoints(QPointF(x(),y()),target_pt);
-            dif= (ln.length()-(i*5));
-
-
-            if(point_index<(way_points.length()-1)){
-                QPointF target_real_pos=target_pt;
-                target_real_pos.setX(target_real_pos.x()+18);
-                target_real_pos.setY(target_real_pos.y()+18);
-                ln2.setPoints((way_points[point_index]),target_real_pos);
-                test =ln2.length();
-                if((test<step_size)){
-                    target_pt=(way_points[point_index]);
-                    target_pt.setX(target_pt.x()-18);
-                    target_pt.setY(target_pt.y()-18);
-                    dx=step_size*(game->direction[point_index][0]);
-                    dy=step_size*(game->direction[point_index][1]);
-                    point_index++;
+        if(found_targetpoint){
+            range[range_number][0]=n;
+            for(;(n>=0);n--){
+                point_dif=(QPointF(x()+18,y()+18)-game->way_points[n].position_enemy);
+                dif=(sqrt(pow(point_dif.x(),2)+pow(point_dif.y(),2)));
+                dif = (dif - 18-SCALE_FACTOR);
+                if(dif>0){
+                    break;
                 }
             }
-            target_pt.setX(target_pt.rx()+dx);
-            target_pt.setY(target_pt.ry()+dy);
-
+            range[range_number][1]=n;
         }
-        target_pt.setX(target_pt.rx()+18);
-        target_pt.setY(target_pt.ry()+18);
-        attack_dest = target_pt;    
-        fire();
+        else{
+            return;
+        }
+        range_number++;
+        }
+    return;
+}
+
+
+
+void Tower::aquire_target(){
+  double step_size=0;
+  QPointF point_dif;
+  int max=range[0][0];
+  int min=range[0][1];
+  int furthest_enemy=(-1);
+  has_target=false;
+
+    if(shoot_wait==0){
+
+        has_target=false;
+
+        for(int count=0;count<=(game->last_enemy+1);count++){
+
+            for(int test_range=0;test_range<=range_number;test_range++){
+                max=range[test_range][0];
+                min=range[test_range][1];
+
+
+                if((max>=game->enemy_list[count])&&(game->enemy_list[count]>=min)){
+                    if(game->enemy_list[count]>furthest_enemy){
+                        furthest_enemy=game->enemy_list[count];
+                    }
+                    break;
+                }
+             }
+        }
+        if(furthest_enemy>=0){
+            has_target=true;
+            step_size=game->way_points[furthest_enemy].step_size;
+            attack_dest=game->way_points[furthest_enemy].position_enemy;
+        }
+
+        //just fire on targets, not on towers
+        if(has_target){
+            double dif=999;
+            double dif_old=1000;
+            for(i=0;(dif>12)&&(dif_old>dif)&&(furthest_enemy+step_size*i<game->last_waypoint);i++){
+                dif_old=dif;
+                point_dif=(QPointF(x()+18,y()+18)-attack_dest);
+                dif=(sqrt(pow(point_dif.x(),2)+pow(point_dif.y(),2)));
+                dif = (dif - (i*7));
+                attack_dest=game->way_points[(furthest_enemy+game->way_points[furthest_enemy].step_size*i)].position_enemy;
+            }
+            fire();
+            shoot_wait++;
+        }else{
+            return;
+        }
+
+        has_target = false;
+    }
+    else{
         shoot_wait++;
-    }else{
-        return;
+        if(shoot_wait>=shoot_speed){
+            shoot_wait=0;
+        }
     }
-
-    has_target = false;
-
-    qDebug() << "has_target " << has_target;
-}
-else{
-    shoot_wait++;
-    if(shoot_wait==shoot_speed){
-        shoot_wait=0;
-    }
-}
 
 }

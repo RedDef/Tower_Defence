@@ -4,6 +4,11 @@
 
 #include <QGraphicsTextItem>
 
+/*
+ * shows on the sceen how many enemys you have destroyed
+
+ * */
+
 class Score: public QGraphicsTextItem{
 public:
     Score(QGraphicsItem * parent=0);

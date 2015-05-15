@@ -32,7 +32,9 @@ SOURCES += main.cpp \
     buildyellowtowericon.cpp \
     gridpoint.cpp \
     health.cpp \
-    score.cpp
+    score.cpp \
+    enemy_point.cpp \
+    road.cpp \
 
 HEADERS  += \
     tower.h \
@@ -53,10 +55,14 @@ HEADERS  += \
     buildyellowtowericon.h \
     gridpoint.h \
     health.h \
-    score.h
+    score.h \
+    enemy_point.h \
+    road.h \
 
 RESOURCES += \
     res.qrc
 
 DISTFILES += \
-    Notes.txt
+    Notes.txt \
+    desktop.ini \
+    Tower_Defence.pro.user

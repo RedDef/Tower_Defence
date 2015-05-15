@@ -3,84 +3,74 @@
 #include <QPixmap>
 #include <QTimer>
 #include <qmath.h>
+#include <QDebug>
 
 
 extern Game * game;
 
-Enemy::Enemy(QList<QPointF> pointsToFollow, QGraphicsItem *parent){
+Enemy::Enemy(QGraphicsItem *parent){
     //set graphics
     setPixmap(QPixmap(":/images/enemy0.png"));
-
     step_count=0;
-    STEP_SIZE=3;
-    health_enemy=10;
+    STEP_SIZE=2;
+    health_enemy=500;
 
-    //set points
-    points = pointsToFollow;
-    point_index = 0;
-    dest = points[0];
+
+    for(enemy_nr=0;game->enemy_list[enemy_nr]!=(-1);enemy_nr++){ //finds the first free slot in the enemy_list
+
+    }
+    if(enemy_nr>game->last_enemy){  //checks if he is the last enemy in the list
+        game->last_enemy=enemy_nr; // set the new last enemy to his number
+    }
+    game->enemy_list[enemy_nr]=0;//set his position in the enemy_list
 
     //connect timer to move_foreward
     connect(game->move_timer,SIGNAL(timeout()),this,SLOT(move_foreward()));
-
-
-    //setTransformOriginPoint(QPointF(18, 18));
-
 }
 
-void Enemy::rotateToPoint(QPointF p){
-    QLineF ln(pos(), p);
-    setRotation((ln.angle()));//(-1) turn clockwhise
-}
 
-double Enemy::hit(double damage){
-    health_enemy = health_enemy - damage;
+void Enemy::hit(double damage){
+    health_enemy = health_enemy - damage; //decreases the health of the enemy
 
     if (health_enemy <= 0) {
-
-        scene()->removeItem(this);
+        game->way_points[step_count].step_size=0;   //clear all elements int way_points and enemy list
+        game->way_points[step_count].enemy=nullptr;
+        game->enemy_list[enemy_nr]=(-1);
+        if(enemy_nr==game->last_enemy){
+            game->last_enemy=(enemy_nr-1);
+        }
 
         // increase Score
-        game->score->increase();
+        game->score->increase(); // increase the game score
 
         // delete them from the heap to save memory
+        scene()->removeItem(this);
         delete this;
+        return;
+
     }
 }
 
-void Enemy::move_foreward(){
-
-    //increment the step_counter
-      step_count++;
-
-      position.setX(x()+18);
-      position.setY(y()+18);
-
-    //if close to dest, rotate to next dest
-    QLineF ln(position, dest);
-    if(ln.length() < STEP_SIZE){
-        setPos(dest.x()-18, dest.y()-18);
-        point_index++;
-        if (point_index >= points.size()){//check if point_index is at the end (euqal to point.size
-            return;
-        }
-        dest = points[point_index];
-        dx = STEP_SIZE * game->direction[point_index-1][0];
-        dy = STEP_SIZE * game->direction[point_index-1][1];
-
-    }
-
-    //move enemy foreward at current angle
-    setPos(x()+dx, y()+dy);
-
-    //decrease health when reaches finish
-    if(pos().x() > 779){
+void Enemy::move_foreward(){// moves the enemy forward
+    game->way_points[step_count].step_size=0; //clears old position
+    game->way_points[step_count].enemy=nullptr;
+    step_count+=STEP_SIZE; // goes to the next position
+    if(step_count>=game->last_waypoint){ //if he has reached the last point destroy enemy and decrease the health of the game
         game->health->decrease();
+        game->enemy_list[enemy_nr]=(-1);
+        if(enemy_nr==game->last_enemy){
+            game->last_enemy=(enemy_nr-1);
+        }
+        scene()->removeItem(this);
+        delete this;
+        return;
     }
 
-    // Endposition noch anpassen, damit es nur einmal zählt
-    // momentan io, aber nur solange der x-Wert des Endpunktes nicht verändert wird (594)
-    // und die Enemys wieder zurücklaufen, also übers Spielfeld hinaus
+    game->way_points[step_count].step_size=STEP_SIZE; //set all information on the new position
+    game->enemy_list[enemy_nr]=step_count;
+    game->way_points[step_count].enemy=this;
 
+    setPos(game->way_points[step_count].position_enemy);//set new position
+    setPos(x()-18, y()-18);
 
 }

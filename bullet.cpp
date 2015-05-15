@@ -16,41 +16,55 @@ Bullet::Bullet(QGraphicsItem *parent){
     connect(game->move_timer,SIGNAL(timeout()),this,SLOT(move()));
 
     //initialize values
-    maxRange = 100;
     distanceTravalled = 0;
     damage_bullet=1;
-    STEP_SIZE = 5;
+    STEP_SIZE = 7;
     dx=0;
     dy=0;
+
 
 }
 
 void Bullet::move(){
+    double dif=1000;
+    QPointF point_dif;
 
-    setPos(x()+dx, y()+dy);
+    distanceTravalled++;
+    setPos(x()+dx,y()+dy);
+
 
     // get a list of all the items currently colliding with this bullet
-    QList<QGraphicsItem *> colliding_items = collidingItems();
 
-    if((x()>720)||(x()<-5)||(y()>720)||(y()<-5)){
+
+    if((x()>720)||(x()<-5)||(y()>720)||(y()<-5)){ //if the bullet is out of the screen delete it
         scene()->removeItem(this);
         delete this;
+        return;
     }
 
-    // if one of the colliding items is an Enemy, destroy both the bullet and the enemy
-    for (int i = 0, n = colliding_items.size(); i < n; ++i){
-        if (typeid(*(colliding_items[i])) == typeid(Enemy)){
+    if(distanceTravalled>steps_to_target){ // destroys bullet if it has traveled to far
+        scene()->removeItem(this);
+        delete this;
+        return;
+    }
 
-            scene()->removeItem(this);
-            Enemy *temp_enemy = dynamic_cast<Enemy *>(colliding_items[i]);
-            temp_enemy->hit(damage_bullet);
 
-            // delete them from the heap to save memory
-            delete this;
+    for(int counter=0;counter<=game->last_enemy;counter++){ //checks if its colliding with an enemy
+        if(game->enemy_list[counter]!=(-1)){
+            point_dif=(QPointF(x()+7,y()+7)-(game->way_points[(game->enemy_list[counter])].position_enemy));
+            dif=(sqrt(pow(point_dif.x(),2)+pow(point_dif.y(),2))); //distance to enemy
+            if(dif<25){ // does the enemy touch the bullet?   25= 18(tower diameter/2) +7 (bullet diameter/2)
 
-            // return (all code below refers to a non existent bullet)
-            return;
+                game->way_points[game->enemy_list[counter]].enemy->hit(damage_bullet); // tells the enemy that he got hit
+                scene()->removeItem(this);
+                delete this;
+                return;
+            }
+
         }
+
     }
+
 
 }
+

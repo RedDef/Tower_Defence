@@ -9,22 +9,17 @@
 class Enemy: public QObject, public QGraphicsPixmapItem{
     Q_OBJECT
 public:
-    Enemy(QList<QPointF> pointsToFollow, QGraphicsItem * parent=0);
-    void rotateToPoint(QPointF p);
+    Enemy(QGraphicsItem * parent=0);
     int STEP_SIZE;
     int step_count;
-    double dx;
-    double dy;
-    int point_index;
-    double hit(double damage);
     double health_enemy;
+    void hit(double damage);
+
 public slots:
     void move_foreward();
 private:
-    QList<QPointF> points;
-    QPointF dest;
     QPointF position;
-    double theta;
+    int enemy_nr;
 };
 
 #endif // ENEMY
