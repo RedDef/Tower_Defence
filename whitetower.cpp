@@ -6,15 +6,21 @@
 extern Game * game;
 
 WhiteTower::WhiteTower(QGraphicsItem *parent){
-    //connect a timer to attack_target
-    connect(game->move_timer,SIGNAL(timeout()),this,SLOT(aquire_target()));
+
     shoot_speed=10;
     damage=1;
     SCALE_FACTOR=100;
+    setrange();
+    tower_cost = 300; //costs of tower to build
+    setPixmap(QPixmap(":/images/tower_field_white.png"));
 
 }
 
 void WhiteTower::fire(){
+
+    /*Middle tower = size of tower/2 = 36/2 = 18
+      Middle bullet = size of bullet/2 = 15/2 = 8*/
+
     //create the bullets
     Bullet *bullet1 = new Bullet();
     Bullet *bullet2 = new Bullet();
@@ -22,8 +28,6 @@ void WhiteTower::fire(){
     Bullet *bullet4 = new Bullet();
     Bullet *bullet5 = new Bullet();
     Bullet *bullet6 = new Bullet();
-
-
 
     //set the graphics
     bullet1->setPixmap(QPixmap(":/images/arrow_black.png"));
@@ -41,8 +45,7 @@ void WhiteTower::fire(){
     bullet5->setPos(x()+10, y()+10);
     bullet6->setPos(x()+10, y()+10);
 
-
-    bullet1->dx=0.866*bullet1->STEP_SIZE;
+    bullet1->dx=0.866*bullet1->STEP_SIZE;//values --> dx = sin(p); dy = cos(p); p={0°,60°,120°,180°,240°,300°)
     bullet1->dy=0.5*bullet1->STEP_SIZE;
     bullet2->dx=0*bullet2->STEP_SIZE;
     bullet2->dy=1*bullet2->STEP_SIZE;
@@ -55,15 +58,12 @@ void WhiteTower::fire(){
     bullet6->dx=0.866*bullet6->STEP_SIZE;
     bullet6->dy=-0.5*bullet6->STEP_SIZE;
 
-
     bullet1->steps_to_target = SCALE_FACTOR/bullet1->STEP_SIZE;
     bullet2->steps_to_target = SCALE_FACTOR/bullet2->STEP_SIZE;
     bullet3->steps_to_target = SCALE_FACTOR/bullet3->STEP_SIZE;
     bullet4->steps_to_target = SCALE_FACTOR/bullet4->STEP_SIZE;
     bullet5->steps_to_target = SCALE_FACTOR/bullet5->STEP_SIZE;
     bullet6->steps_to_target = SCALE_FACTOR/bullet6->STEP_SIZE;
-
-
 
     bullet1->damage_bullet=damage;
     bullet2->damage_bullet=damage;;
@@ -72,7 +72,6 @@ void WhiteTower::fire(){
     bullet5->damage_bullet=damage;;
     bullet6->damage_bullet=damage;;
 
-    //add to scene
     game->scene->addItem(bullet1);
     game->scene->addItem(bullet2);
     game->scene->addItem(bullet3);
@@ -80,11 +79,10 @@ void WhiteTower::fire(){
     game->scene->addItem(bullet5);
     game->scene->addItem(bullet6);
 
-
-
 }
 
 void WhiteTower::aquired_target(){
+
     int n=range[0][0];
     int min=range[0][1];
 
@@ -92,15 +90,13 @@ void WhiteTower::aquired_target(){
 
           has_target=false;
 
-          for(int count=0;count<=(game->last_enemy+1);count++){
-
+          for(int count=0;count<=(game->last_enemy+1);count++){//check if enemy is in range
 
               for(int test_range=0;test_range<=range_number;test_range++){
                   n=range[test_range][0];
                   min=range[test_range][1];
 
-
-                  if((n>=game->enemy_list[count])&&(game->enemy_list[count]>=min)){
+                  if((n>=game->enemy_list[count].step)&&(game->enemy_list[count].step>=min)){
                       fire();
                       shoot_wait++;
                       return;
@@ -108,8 +104,10 @@ void WhiteTower::aquired_target(){
                }
           }
       }
+
       else{
           shoot_wait++;
+
           if(shoot_wait>=shoot_speed){
               shoot_wait=0;
           }

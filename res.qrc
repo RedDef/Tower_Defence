@@ -30,7 +30,16 @@
         <file>gridpoint.png</file>
         <file>background_menu_wood.png</file>
         <file>button_aboutus.png</file>
-        <file>button_go.png</file>
         <file>button_help.png</file>
+        <file>Paused.png</file>
+        <file>tower_menu_yellow_2.png</file>
+        <file>tower_menu_white_2.png</file>
+        <file>tower_menu_red_2.png</file>
+        <file>tower_menu_green_2.png</file>
+        <file>tower_menu_blue_2.png</file>
+        <file>tower_menu_black_2.png</file>
+        <file>AboutUs.png</file>
+        <file>button_start.png</file>
+        <file>Manual.png</file>
     </qresource>
 </RCC>

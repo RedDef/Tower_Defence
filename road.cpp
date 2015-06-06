@@ -1,6 +1,5 @@
 #include "road.h"
 
-
 Road::Road(QGraphicsItem *parent): QObject(), QGraphicsPixmapItem(parent){
 
     //set the graphics

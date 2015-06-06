@@ -2,13 +2,13 @@
 #include <QFont>
 
 Score::Score(QGraphicsItem *parent): QGraphicsTextItem(parent){
+
      //initialize score
     score = 0;
 
     // draw the text
     setPlainText(QString("Score: ") + QString::number(score)); // Score: 0
-    setDefaultTextColor(Qt::gray);
-    setPos(x()+730,y()+500);
+    setDefaultTextColor(Qt::lightGray);
     setFont(QFont("times",16));
 }
 

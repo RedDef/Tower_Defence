@@ -8,11 +8,20 @@
 extern Game * game;
 
 GreenTower::GreenTower(QGraphicsItem *parent){
-    //connect a timer to attack_target
-shoot_speed=15;
+
+    damage=2;
+    shoot_speed=15;
+    SCALE_FACTOR=100;
+    setrange();
+    tower_cost = 80; //costs of tower to build
+    setPixmap(QPixmap(":/images/tower_field_green.png"));
 }
 
-void GreenTower::fire(){
+void GreenTower::fire(){   
+
+    /*Middle tower = size of tower/2 = 36/2 = 18
+      Middle bullet = size of bullet/2 = 15/2 = 8*/
+
     //create the bullets
     Bullet *bullet1 = new Bullet();
     Bullet *bullet2 = new Bullet();
@@ -41,10 +50,9 @@ void GreenTower::fire(){
     bullet3->dx=cos((angle-10)*3.1415/180)*bullet1->STEP_SIZE;
     bullet3->dy=sin((angle-10)*3.1415/180)*bullet1->STEP_SIZE;
 
-    bullet1->steps_to_target=i;
-    bullet2->steps_to_target=i;
-    bullet3->steps_to_target=i;
-
+    bullet1->steps_to_target=steps_to_target; //passes steps_to_target from tower to bullet
+    bullet2->steps_to_target=steps_to_target; //passes steps_to_target from tower to bullet
+    bullet3->steps_to_target=steps_to_target; //passes steps_to_target from tower to bullet
 
     //add to scene
     game->scene->addItem(bullet1);

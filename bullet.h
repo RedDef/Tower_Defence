@@ -8,22 +8,27 @@
 
 class Bullet: public QObject, public QGraphicsPixmapItem{
     Q_OBJECT
+
 public:
-    Bullet(QGraphicsItem *parent=0);
-    double damage_bullet; //defines how much damage the bullet has
-    double dy; //dy and dx define the direction of the bullet.
+    Bullet(QGraphicsItem *parent=0);//constructor
+    double damage_bullet; //defines how much damage the bullet makes
+
+    //dy and dx define the flight-direction of the bullet
+    double dy;
     double dx;
-    int STEP_SIZE;  //defines the speed of the bullet
-    int steps_to_target; //if the bullet traveld further than the tower aimed bullet gets deleted
+
+    int STEP_SIZE;  //defines the speed of the bullet; how many pixel per step
+
+    /*max. distance for bullet to travel bevore selfdistruction,
+      callculated and set by the tower->aquire_target*/
+    int steps_to_target;
 
 
 public slots:
-    void move();    // moves the bullet
+    void move(); //function to move the bullet
 
 private:
-
-    double distanceTravalled;   //counts how many steps the bullet made
-
+    double distanceTravalled; //counts how many steps the bullet made
 
 };
 

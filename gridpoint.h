@@ -1,3 +1,7 @@
+/**********************************************************************************************************************/
+/* gridpoints are all over the screen, expect in the menu. on every gridpoint you can place one tower or a road piece */
+/**********************************************************************************************************************/
+
 #ifndef GRIDPOINT
 #define GRIDPOINT
 
@@ -6,20 +10,13 @@
 #include <QPointF>
 #include <QObject>
 
-/*
- * gridpoints are all over the screen. on every gridpoint you can place one tower or a road piece
-
- * */
-
-
 class Gridpoint: public QObject, public QGraphicsPixmapItem{
     Q_OBJECT
+
 public:
-    Gridpoint(QGraphicsItem *parent=0);
-    double distanceTo(QGraphicsItem *item);
-    bool occupied; //defines if the gridpoint occupied or not
-public slots:
-protected:
+    Gridpoint(QGraphicsItem *parent=0);//constructor
+    bool occupied; //defines if the gridpoint is occupied or not
+
 };
 
 #endif // GRIDPOINT
