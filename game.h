@@ -24,6 +24,7 @@
 #include "buildyellowtowericon.h"
 #include <QGraphicsTextItem>
 #include "redtower.h"
+#include "menu_go.h"
 
 
 class Game: public QGraphicsView{
@@ -36,6 +37,7 @@ public:
     void mouseMoveEvent(QMouseEvent *event); //passes the actual cursor-position to the towericon
     void mousePressEvent(QMouseEvent *event);//build the tower on the actual cordinates
     void keyPressEvent(QKeyEvent*event);
+    void keyReleaseEvent(QKeyEvent*event);
 
     BuildRedTowerIcon * rt;
     BuildGreenTowerIcon * gt;
@@ -69,6 +71,7 @@ public:
     int costGreenTower;
     int costWhiteTower;
     int costYellowTower;
+    int selectTower=1;
 
     QGraphicsTextItem *redcost_1;
     QGraphicsTextItem *reddamage;
@@ -100,18 +103,30 @@ public:
     QGraphicsTextItem *blackrange;
     QGraphicsTextItem *blackspeed;
 
+    QGraphicsTextItem * finalScore;
+    QGraphicsPixmapItem *gameOverScreen;
+    Menu_Go *startbutton;
+
     bool keyPressEnable = true;
+    bool gameover=false;
+    char createEnemisState=1;
+    int enemiesSpawned; //counts the number of spwaned enemys
+
+
+
 
 private:
-    int delay_spawn_enemys=20; //time between spawning the enemys
+    int delay_spawn_enemys=1; //time between spawning the enemys
     int set_waypoints();    //sets the position of the enemy points in the way_point[] array
     void createRoad(); //builds the road
-    int enemiesSpawned; //counts the number of spwaned enemys
+
     int maxNumberOfEnemies; //max. enemies that could be spawned
-    char createEnemisState=1;
-    int delayCounter=0;
+
+    int delayCounter=1;
     double enemy_health_boost=1;
     double enemy_worth_boost=1;
+
+    int keepBuilding=0;
     PauseScreen * pause; //picture when the game is paused
 
 

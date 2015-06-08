@@ -8,10 +8,10 @@ extern Game * game;
 YellowTower::YellowTower(QGraphicsItem *parent){
 
      shoot_speed=5;
-     damage=1;
-     SCALE_FACTOR=50;
+     damage=15;
+     SCALE_FACTOR=150;
      setrange();
-     tower_cost = 200; //costs of tower to build
+     tower_cost = 800; //costs of tower to build
      setPixmap(QPixmap(":/images/tower_field_yellow.png"));
 
 }

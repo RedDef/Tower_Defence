@@ -32,9 +32,16 @@
 #include <QFont>
 #include <QTextEdit>
 
-Game::Game(): QGraphicsView(){
+extern QGraphicsScene *scenemain;
 
+Game::Game(): QGraphicsView(){
     focusedTower=nullptr;
+
+    //set cursor
+    cursor = nullptr;
+    building = nullptr;
+    setMouseTracking(true);
+
     global_timer->start(40);
 
     //create a scene
@@ -44,15 +51,12 @@ Game::Game(): QGraphicsView(){
     //set the scene
     setScene(scene);
 
-    //set cursor
-    cursor = nullptr;
-    building = nullptr;
-    setMouseTracking(true);
 
     //alter window
     setFixedSize(922,722);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+
 
     //split screen into playfield and menu
     field_menu << QPointF(720,0) << QPointF(720,720);
@@ -100,10 +104,11 @@ Game::Game(): QGraphicsView(){
 
 
     // define way. wher the enemys change the direction
-    pointsToFollow  << QPointF(18,18)<<QPointF(18,702)<<  QPointF(90,702)<<  QPointF(90,18)<< QPointF(162,18)<< QPointF(162,702)<<QPointF(234,702)<< QPointF(234,18)
-                    << QPointF(306,18)<< QPointF(306,702)<< QPointF(378,702)<< QPointF(378,18)
-                    << QPointF(450,18)<< QPointF(450,702)<< QPointF(522,702)<< QPointF(522,18)
-                    << QPointF(594,18)<< QPointF(594,702)<< QPointF(702,702)<<QPointF(702,18);
+    pointsToFollow  << QPointF(54,18)<<QPointF(54,162)<<  QPointF(162,162)<<  QPointF(162,54)<< QPointF(234,54)<< QPointF(234,234)<<QPointF(54,234)<< QPointF(54,666)
+                    << QPointF(378,666)<< QPointF(378,378)<< QPointF(270,378)<< QPointF(270,558)
+                    << QPointF(162,558)<< QPointF(162,306)<< QPointF(594,306)<< QPointF(594,486)
+                    << QPointF(486,486)<< QPointF(486,558)<< QPointF(594,558)<<QPointF(594,666)
+                    << QPointF(702,666)<< QPointF(702,126)<< QPointF(486,126)<<QPointF(486,54);
 
 
     //this is an array where you can look up in which direction you have to go to get to the next point (pointsToFollow)
@@ -131,15 +136,16 @@ Game::Game(): QGraphicsView(){
     //create the menu buttons ?, About, Go
     Menu_About *aboutus = new Menu_About;
     Menu_Explain *mexp = new Menu_Explain;
-    Menu_Go *mgo = new Menu_Go;
+
+    startbutton = new Menu_Go;
 
     aboutus->setPos(730,550);
     mexp->setPos(850,570);
-    mgo->setPos(775,650);
+    startbutton->setPos(775,650);
 
     scene->addItem(aboutus);
     scene->addItem(mexp);
-    scene->addItem(mgo);
+    scene->addItem(startbutton);
 
     //create Tower-Icon in the menu
     rt = new BuildRedTowerIcon();
@@ -165,12 +171,12 @@ Game::Game(): QGraphicsView(){
     scene->addItem(wt);
 
     //**********************
-    costRedTower=30;
-    costGreenTower= 80;
-    costBlueTower= 100;
-    costYellowTower= 200;
-    costWhiteTower= 300;
-    costBlackTower= 350;
+    costRedTower=50;
+    costGreenTower= 100;
+    costBlueTower= 300;
+    costYellowTower= 800;
+    costWhiteTower= 1500;
+    costBlackTower= 3500;
 
 
     // create Score Text
@@ -206,6 +212,9 @@ void Game::createtowers(){
     RedTower *red = new RedTower();
     scene->addItem(red);
     red->setPos(0,0);
+
+    costRedTower=red->tower_cost;
+
 
     //text cost under icon
     redcost_1 = new QGraphicsTextItem;
@@ -255,6 +264,9 @@ void Game::createtowers(){
     scene->addItem(green);
     green->setPos(0,0);
 
+    costGreenTower= green->tower_cost;
+
+
     //text cost under icon
     greencost_1 = new QGraphicsTextItem;
     greencost_1->setPlainText(QString("Cost: ") + QString::number(green->tower_cost));
@@ -262,6 +274,8 @@ void Game::createtowers(){
     greencost_1->setFont(QFont("times",10));
     greencost_1->setPos(740,140);
     scene->addItem(greencost_1);
+
+
 
     //text damage
     greendamage = new QGraphicsTextItem;
@@ -302,6 +316,9 @@ void Game::createtowers(){
     BlueTower *blue = new BlueTower();
     scene->addItem(blue);
     blue->setPos(0,0);
+
+    costBlueTower= blue->tower_cost;
+
 
     //text cost under icon
     bluecost_1 = new QGraphicsTextItem;
@@ -351,6 +368,9 @@ void Game::createtowers(){
     scene->addItem(yellow);
     yellow->setPos(0,0);
 
+    costYellowTower= yellow->tower_cost;
+
+
     //text cost under icon
     yellowcost_1 = new QGraphicsTextItem;
     yellowcost_1->setPlainText(QString("Cost: ") + QString::number(yellow->tower_cost));
@@ -398,6 +418,9 @@ void Game::createtowers(){
     WhiteTower *white = new WhiteTower();
     scene->addItem(white);
     white->setPos(0,0);
+
+    costWhiteTower= white->tower_cost;
+
 
 
     //text cost under icon
@@ -448,6 +471,8 @@ void Game::createtowers(){
     scene->addItem(black);
     black->setPos(0,0);
 
+    costBlackTower= black->tower_cost;
+
     //text cost under icon
     blackcost_1 = new QGraphicsTextItem;
     blackcost_1->setPlainText(QString("Cost: ") + QString::number(black->tower_cost));
@@ -487,6 +512,7 @@ void Game::createtowers(){
     scene->removeItem(black);
     delete black;
 
+    global_timer->stop();
     disconnect(global_timer,SIGNAL(timeout()),this,SLOT(createtowers()));
 
 }
@@ -516,48 +542,79 @@ void Game::mouseMoveEvent(QMouseEvent *event){
 }
 
 void Game::mousePressEvent(QMouseEvent *event){
-    if(global_timer->isActive()){//checks if the game is paused
-        if(building){
+    if((building)&&(global_timer->isActive())){
 
-            //return if cursor is coliding with a tower
-            QList<QGraphicsItem *> items = cursor->collidingItems();
+        //return if cursor is coliding with a tower
+        QList<QGraphicsItem *> items = cursor->collidingItems();
 
-            double closest_dist = 5000;
-            bool has_gridpoint=false;
+        double closest_dist = 5000;
+        bool has_gridpoint=false;
 
-            int closest_gridpoint = 100;
+        int closest_gridpoint = 100;
 
 
-            for(size_t i=0, n = items.size(); i<n; i++){
-                Gridpoint *temp_gridpoint = dynamic_cast<Gridpoint *>(items[i]);
+        for(size_t i=0, n = items.size(); i<n; i++){
+            Gridpoint *temp_gridpoint = dynamic_cast<Gridpoint *>(items[i]);
 
-                if(temp_gridpoint){
-                    has_gridpoint=true;
+            if(temp_gridpoint){
+                has_gridpoint=true;
 
-                    QLineF ln(pos(),items[i]->pos());
+                QLineF ln(pos(),items[i]->pos());
 
-                    if(ln.length() < closest_dist){
-                        closest_dist = ln.length();
-                        closest_gridpoint = i;
+                if(ln.length() < closest_dist){
+                    closest_dist = ln.length();
+                    closest_gridpoint = i;
 
-                    }
                 }
             }
+        }
 
-            if(has_gridpoint){
+        if(has_gridpoint){
 
-                Gridpoint *temp_gridpoint = dynamic_cast<Gridpoint *>(items[closest_gridpoint]);
-                if(temp_gridpoint->occupied==0 && ((money->money)>=(building->tower_cost))){    //check gridpoint is free and enough money
-                    temp_gridpoint->occupied=1;
-                    building->setPos((temp_gridpoint->pos().x()-12),(temp_gridpoint->pos().y()-12));
-                    building->find_targetpoints();
-                    building->attack_area->hide();
-                    building->TowersGridpoint=temp_gridpoint;
-                    money->decrease(building->tower_cost);    //decrease money
-                    scene->removeItem(cursor);
-                    delete cursor;
-                    cursor = nullptr;
-                    building = nullptr;
+            Gridpoint *temp_gridpoint = dynamic_cast<Gridpoint *>(items[closest_gridpoint]);
+            if((temp_gridpoint->occupied==0) && (money->getMoney()>=building->tower_cost)){    //check gridpoint is free and enough money
+                temp_gridpoint->occupied=1;
+                building->setPos((temp_gridpoint->pos().x()-12),(temp_gridpoint->pos().y()-12));
+                building->find_targetpoints();
+                building->attack_area->hide();
+                building->TowersGridpoint=temp_gridpoint;
+                money->decrease(building->tower_cost);    //decrease money
+                scene->removeItem(cursor);
+                delete cursor;
+                cursor = nullptr;
+                building = nullptr;
+
+                if(keepBuilding){
+                    switch(selectTower){
+                        case 1:
+                              bkt->buildTower();
+                              break;
+
+                        case 2:
+                              bt->buildTower();
+                              break;
+
+                        case 3:
+                              gt->buildTower();
+                              break;
+
+                        case 4:
+                              rt->buildTower();
+                              break;
+
+                        case 5:
+                              wt->buildTower();
+                              break;
+
+                        case 6:
+                              yt->buildTower();
+                              break;
+
+                        default:
+                                break;
+                    }
+                }
+                else{
                     rt->hideText();
                     gt->hideText();
                     bt->hideText();
@@ -565,26 +622,33 @@ void Game::mousePressEvent(QMouseEvent *event){
                     wt->hideText();
                     bkt->hideText();
                 }
-            }
 
-            has_gridpoint=false;
-            return;
+
+            }
         }
 
+        has_gridpoint=false;
+        return;
+    }
 
-        else{
-            if(focusedTower){ //hides the range of the tower again
-                focusedTower->attack_area->hide();
-                focusedTower=nullptr;
-            }
-            QGraphicsView::mousePressEvent(event);
+
+    else{
+        if(focusedTower){ //hides the range of the tower again
+            focusedTower->attack_area->hide();
+            focusedTower=nullptr;
         }
+        QGraphicsView::mousePressEvent(event);
     }
 }
 
 void Game::keyPressEvent(QKeyEvent *event)
 {
     if(keyPressEnable){
+        if(event->key()==Qt::Key_T){
+
+            keepBuilding=1;
+        }
+
         if (event->key()==Qt::Key_Escape){
             if(building){
                 scene->removeItem(building);
@@ -613,7 +677,7 @@ void Game::keyPressEvent(QKeyEvent *event)
 
         }
 
-        if (event->key()==Qt::Key_P){
+        if ((event->key()==Qt::Key_P)&&(!gameover)){
             if(global_timer->isActive()){
                     global_timer->stop();
                     pause = new PauseScreen();
@@ -630,54 +694,105 @@ void Game::keyPressEvent(QKeyEvent *event)
     }
 }
 
+void Game::keyReleaseEvent(QKeyEvent *event)
+{
+    if(event->key()==Qt::Key_T){
+        keepBuilding=0;
+    }
+}
+
+
 
 
 void Game::createRoad(){
-
-    Road * build_way = new Road();
-    scene->addItem(build_way);
-    build_way->setPos(way_points[0]);
-    build_way->setPos(build_way->x()-18,build_way->y()-18);
+    Road * build_way;
     bool has_gridpoint=false;
 
-        for(int count=0;count<=last_waypoint;count++){
+    {
+        QGraphicsPixmapItem *finalWaypoint=new QGraphicsPixmapItem(QString(":/images/background_road_finisch.png"));
+        scene->addItem(finalWaypoint);
+        finalWaypoint->setPos(way_points[last_waypoint-1]);
 
-            build_way->setPos(way_points[count]);
-            QList<QGraphicsItem *> items = build_way->collidingItems();
-            int max = items.size();
-            double closest_dist = 5000;
+        QList<QGraphicsItem *> items = finalWaypoint->collidingItems();
+        int max = items.size();
+        double closest_dist = 5000;
 
-            int closest_gridpoint = 100;
+        int closest_gridpoint = 100;
 
-            for(int fuck=0; fuck<max; fuck++){
-                Gridpoint *temp_gridpoint = dynamic_cast<Gridpoint *>(items[fuck]);
-                if(temp_gridpoint){
-                    has_gridpoint=true;
+        for(int fuck=0; fuck<max; fuck++){
+            Gridpoint *temp_gridpoint = dynamic_cast<Gridpoint *>(items[fuck]);
+            if(temp_gridpoint){
+                has_gridpoint=true;
 
-                    QLineF ln(pos(),items[fuck]->pos());
+                QLineF ln(way_points[last_waypoint],items[fuck]->pos());
 
-                    if(ln.length() < closest_dist){
-                        closest_dist = ln.length();
-                        closest_gridpoint = fuck;
-                    }
+                if(ln.length() < closest_dist){
+                    closest_dist = ln.length();
+                    closest_gridpoint = fuck;
                 }
             }
-
-            if(has_gridpoint){
-
-                Gridpoint *temp_gridpoint = dynamic_cast<Gridpoint *>(items[closest_gridpoint]);
-                if(temp_gridpoint->occupied==0){
-
-                    temp_gridpoint->occupied=1;
-                    scene->addItem(build_way);
-                    build_way->setPos((temp_gridpoint->pos().x()-12),(temp_gridpoint->pos().y()-12));
-                    build_way = new Road();
-                    scene->addItem(build_way);
-                }
-            }
-
-            has_gridpoint=false;
         }
+
+        if(has_gridpoint){
+
+            Gridpoint *temp_gridpoint = dynamic_cast<Gridpoint *>(items[closest_gridpoint]);
+            if(temp_gridpoint->occupied==0){
+                temp_gridpoint->occupied=1;
+                finalWaypoint->setPos((temp_gridpoint->pos().x()-12),(temp_gridpoint->pos().y()-12));
+                build_way = new Road();
+                scene->addItem(build_way);
+            }
+        }
+
+    }
+
+
+
+
+    for(int count=1;count<last_waypoint;count++){
+
+        build_way->setPos(way_points[count]);
+        QList<QGraphicsItem *> items = build_way->collidingItems();
+        int max = items.size();
+        double closest_dist = 5000;
+
+        int closest_gridpoint = 100;
+
+        for(int fuck=0; fuck<max; fuck++){
+            Gridpoint *temp_gridpoint = dynamic_cast<Gridpoint *>(items[fuck]);
+            if(temp_gridpoint){
+                has_gridpoint=true;
+
+                QLineF ln(way_points[count],items[fuck]->pos());
+
+                if(ln.length() < closest_dist){
+                    closest_dist = ln.length();
+                    closest_gridpoint = fuck;
+                }
+            }
+        }
+
+        if(has_gridpoint){
+
+            Gridpoint *temp_gridpoint = dynamic_cast<Gridpoint *>(items[closest_gridpoint]);
+            if(temp_gridpoint->occupied==0){
+                count+=34;
+
+                temp_gridpoint->occupied=1;
+                scene->addItem(build_way);
+                build_way->setPos((temp_gridpoint->pos().x()-12),(temp_gridpoint->pos().y()-12));
+                build_way = new Road();
+                scene->addItem(build_way);
+            }
+        }
+
+        has_gridpoint=false;
+    }
+
+    if(build_way){
+        scene->removeItem(build_way);
+        delete build_way;
+    }
 }
 
 int Game::set_waypoints(){
@@ -726,7 +841,7 @@ void Game::creatEnemies(){
         switch (createEnemisState) {
         case 1:
               {
-                delay_spawn_enemys=10;
+                delay_spawn_enemys=20;
                 Enemy *enemy = new GreenEnemy();
                 enemy->setPos((pointsToFollow[0].x()-18),(pointsToFollow[0].y()-18));
                 enemy->health_enemy=enemy->health_enemy*enemy_health_boost;
@@ -736,9 +851,10 @@ void Game::creatEnemies(){
                 if(enemiesSpawned==20){
                     enemiesSpawned=0;
                     createEnemisState=2;
-                    delay_spawn_enemys=5;
+                    delay_spawn_enemys=50;
                 }
               }
+            if(delay_spawn_enemys>=10) delay_spawn_enemys-=3;
               break;
 
         case 2:{
@@ -752,7 +868,7 @@ void Game::creatEnemies(){
                 if(enemiesSpawned==20){
                     enemiesSpawned=0;
                     createEnemisState=3;
-                    delay_spawn_enemys=5;
+                    delay_spawn_enemys=50;
                 }
                }
                break;
@@ -768,12 +884,12 @@ void Game::creatEnemies(){
                 if(enemiesSpawned==20){
                     enemiesSpawned=0;
                     createEnemisState=4;
-                    delay_spawn_enemys=5;
+                    delay_spawn_enemys=50;
                 }
                }
                break;
         case 4:{
-                delay_spawn_enemys=10;
+                delay_spawn_enemys=15;
                 Enemy *enemy = new BlueEnemy();
                 enemy->setPos((pointsToFollow[0].x()-18),(pointsToFollow[0].y()-18));
                 enemy->health_enemy=enemy->health_enemy*enemy_health_boost;
@@ -783,12 +899,12 @@ void Game::creatEnemies(){
                 if(enemiesSpawned==20){
                     enemiesSpawned=0;
                     createEnemisState=5;
-                    delay_spawn_enemys=5;
+                    delay_spawn_enemys=50;
                 }
                }
                break;
         case 5:{
-                delay_spawn_enemys=10;
+                delay_spawn_enemys=15;
                 Enemy *enemy = new VioletEnemy();
                 enemy->setPos((pointsToFollow[0].x()-18),(pointsToFollow[0].y()-18));
                 enemy->health_enemy=enemy->health_enemy*enemy_health_boost;
@@ -798,12 +914,12 @@ void Game::creatEnemies(){
                 if(enemiesSpawned==20){
                     enemiesSpawned=0;
                     createEnemisState=6;
-                    delay_spawn_enemys=5;
+                    delay_spawn_enemys=50;
                 }
                }
                break;
         case 6:{
-                delay_spawn_enemys=10;
+                delay_spawn_enemys=15;
                 Enemy *enemy = new RedEnemy();
                 enemy->setPos((pointsToFollow[0].x()-18),(pointsToFollow[0].y()-18));
                 enemy->health_enemy=enemy->health_enemy*enemy_health_boost;
@@ -811,11 +927,25 @@ void Game::creatEnemies(){
                 scene->addItem(enemy);
                 enemiesSpawned += 1;
                 if(enemiesSpawned==20){
-                    enemy_worth_boost=enemy_worth_boost*1.2;
-                    enemy_health_boost=enemy_health_boost*1.3;
+                    enemy_worth_boost=enemy_worth_boost*1.6;
+                    enemy_health_boost=enemy_health_boost*1.8;
                     enemiesSpawned=0;
                     createEnemisState=1;
-                    delay_spawn_enemys=5;
+                    delay_spawn_enemys=50;
+                }
+               }
+               break;
+
+        case 7:{
+                delay_spawn_enemys=2;
+                enemiesSpawned += 1;
+                if(enemiesSpawned==20){
+                    enemy_worth_boost=1;
+                    enemy_health_boost=1;
+                    enemiesSpawned=0;
+                    createEnemisState=1;
+                    delay_spawn_enemys=50;
+                    global_timer->stop();
                 }
                }
                break;
@@ -829,7 +959,7 @@ void Game::creatEnemies(){
 
     delayCounter++;
 
-    if(delayCounter==delay_spawn_enemys){
+    if(delayCounter>=delay_spawn_enemys){
         delayCounter=0;
     }
 

@@ -13,7 +13,7 @@ extern Game *game;
 Money::Money(QGraphicsItem *parent): QGraphicsTextItem(parent){
 
     //initialize money -> initual value
-    money = 100;
+    money = 200;
 
     // draw the text
     setPlainText(QString("Money: ") + QString::number(money)); // money: 0
@@ -38,6 +38,13 @@ void Money::decrease(int tower_cost)
 
 int Money::getMoney(){
     return money;
+}
+
+void Money::setMoney(int newMoney)
+{
+    money = newMoney;    // decrease money by building a tower
+    setPlainText(QString("Money: ") + QString::number(money));
+    setBuildIcons();
 }
 
 void Money::setBuildIcons()

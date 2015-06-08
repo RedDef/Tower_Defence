@@ -15,6 +15,7 @@ public:
     Score(QGraphicsItem * parent=0);//constructor
     void increase();//function increases the score
     int getScore();
+    void setScore(int newScore);
 
 private:
     int score;

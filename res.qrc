@@ -41,5 +41,8 @@
         <file>AboutUs.png</file>
         <file>button_start.png</file>
         <file>Manual.png</file>
+        <file>gameover.png</file>
+        <file>background_road_finisch.png</file>
+        <file>gameover2.png</file>
     </qresource>
 </RCC>

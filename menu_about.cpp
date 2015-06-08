@@ -14,7 +14,7 @@ Menu_About::Menu_About(QGraphicsItem *parent){
 
 void Menu_About::mousePressEvent(QGraphicsSceneMouseEvent *event){
 
-    if(game->global_timer->isActive()){
+    if(game->global_timer->isActive()&&(!game->gameover)){
             game->global_timer->stop();
             aboutus = new AboutusScreen();
             game->scene->addItem(aboutus);

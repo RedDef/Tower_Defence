@@ -15,8 +15,12 @@ public:
     void increase(int enemy_worth);    //function increases the money
     void decrease(int tower_cost);
     int getMoney();
-    int money;
+    void setMoney(int newMoney);
+
     void setBuildIcons();
+
+private:
+    int money;
 
 };
 

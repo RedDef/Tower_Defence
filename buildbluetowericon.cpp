@@ -9,16 +9,9 @@ BuildBlueTowerIcon::BuildBlueTowerIcon(QGraphicsItem *parent):QGraphicsPixmapIte
 }
 
 void BuildBlueTowerIcon::mousePressEvent(QGraphicsSceneMouseEvent *event){
-    if((!game->building)&&(game->global_timer->isActive())){
-        game->building = new BlueTower();
-        game->setCursor(QString(":/images/tower_field_blue.png"));
-        game->scene->addItem(game->building);
-
-        QPoint p = game->mapFromGlobal(QCursor::pos());
-        game->building->setPos(p.x()-18,p.y()-18);
-        game->cursor->setPos(p.x()-18,p.y()-18);
-
-        showText();
+    if((!game->building)&&(game->global_timer->isActive())&&(!game->gameover)){
+        buildTower();
+        game->selectTower=2;
     }
 }
 
@@ -51,4 +44,17 @@ void BuildBlueTowerIcon::hideText(){
     game->bluerange->hide();
     game->bluespeed->hide();
 
+}
+
+void BuildBlueTowerIcon::buildTower()
+{
+    game->building = new BlueTower();
+    game->setCursor(QString(":/images/tower_field_blue.png"));
+    game->scene->addItem(game->building);
+
+    QPoint p = game->mapFromGlobal(QCursor::pos());
+    game->building->setPos(p.x()-18,p.y()-18);
+    game->cursor->setPos(p.x()-18,p.y()-18);
+
+    showText();
 }

@@ -14,7 +14,7 @@ Menu_Explain::Menu_Explain(QGraphicsItem *parent){
 
 void Menu_Explain::mousePressEvent(QGraphicsSceneMouseEvent *event){
 
-    if(game->global_timer->isActive()){
+    if(game->global_timer->isActive()&&(!game->gameover)){
             game->global_timer->stop();
             explain = new ExplainScreen();
             game->scene->addItem(explain);

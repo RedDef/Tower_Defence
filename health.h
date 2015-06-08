@@ -13,6 +13,7 @@ public:
     Health(QGraphicsItem * parent=0);//constructor
     void decrease(); //decreases the health
     int getHealth(); //gives back the health
+    void setHealth(int newHealth);
 
 private:
     int health;

@@ -62,6 +62,24 @@ void Enemy::hit(double damage){
 
 void Enemy::move_foreward(){// moves the enemy forward
 
+    if(game->gameover){
+        game->enemy_list[enemy_nr].step=(-1);
+        game->enemy_list[enemy_nr].step_size=0;
+        game->enemy_list[enemy_nr].pointer=nullptr;
+        game->enemy_list[enemy_nr].position=QPointF(0,0);
+
+
+        if(enemy_nr==game->last_enemy){
+            for(;(game->enemy_list[game->last_enemy].step==(-1))&&(game->last_enemy>0);){
+                game->last_enemy--;
+            }
+        }
+
+        scene()->removeItem(this);
+        delete this;
+        return;
+    }
+
     step_count+=STEP_SIZE; // goes to the next position
 
     if(step_count>=game->last_waypoint){ //if he has reached the last point destroy enemy and decrease the health of the game

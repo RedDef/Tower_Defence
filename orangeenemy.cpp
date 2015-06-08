@@ -9,7 +9,7 @@ OrangeEnemy::OrangeEnemy(QGraphicsItem *parent)
     setPixmap(QPixmap(":/images/enemy4.png"));
     step_count=0;
     STEP_SIZE=5;
-    health_enemy=10;
+    health_enemy=15;
     game->enemy_list[enemy_nr].step_size=STEP_SIZE;
 }
 

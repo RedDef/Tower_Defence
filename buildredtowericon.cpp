@@ -9,17 +9,9 @@ BuildRedTowerIcon::BuildRedTowerIcon(QGraphicsItem *parent):QGraphicsPixmapItem(
 }
 
 void BuildRedTowerIcon::mousePressEvent(QGraphicsSceneMouseEvent *event){
-    if((!game->building)&&(game->global_timer->isActive())){
-        game->building = new RedTower();
-        game->setCursor(QString(":/images/tower_field_red.png"));
-        game->scene->addItem(game->building);
-
-        QPoint p = game->mapFromGlobal(QCursor::pos());
-        game->building->setPos(p.x()-18,p.y()-18);
-        game->cursor->setPos(p.x()-18,p.y()-18);
-
-        showText();
-
+    if((!game->building)&&(game->global_timer->isActive())&&(!game->gameover)){
+        buildTower();
+        game->selectTower=4;
     }
 }
 
@@ -52,4 +44,17 @@ void BuildRedTowerIcon::hideText(){
     game->redrange->hide();
     game->redspeed->hide();
 
+}
+
+void BuildRedTowerIcon::buildTower()
+{
+    game->building = new RedTower();
+    game->setCursor(QString(":/images/tower_field_red.png"));
+    game->scene->addItem(game->building);
+
+    QPoint p = game->mapFromGlobal(QCursor::pos());
+    game->building->setPos(p.x()-18,p.y()-18);
+    game->cursor->setPos(p.x()-18,p.y()-18);
+
+    showText();
 }

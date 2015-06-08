@@ -97,6 +97,7 @@ RESOURCES += \
 DISTFILES += \
     Notes.txt \
     desktop.ini \
-    Tower_Defence.pro.user
+    Tower_Defence.pro.user \
+    button_go.png
 
 FORMS +=

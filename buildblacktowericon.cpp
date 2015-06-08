@@ -9,16 +9,9 @@ BuildBlackTowerIcon::BuildBlackTowerIcon(QGraphicsItem *parent):QGraphicsPixmapI
 }
 
 void BuildBlackTowerIcon::mousePressEvent(QGraphicsSceneMouseEvent *event){    
-    if((!game->building)&&(game->global_timer->isActive())){
-        game->building = new BlackTower();
-        game->setCursor(QString(":/images/tower_field_black.png"));
-        game->scene->addItem(game->building);
-
-        QPoint p = game->mapFromGlobal(QCursor::pos());
-        game->building->setPos(p.x()-18,p.y()-18);
-        game->cursor->setPos(p.x()-18,p.y()-18);
-
-        showText();
+    if((!game->building)&&(game->global_timer->isActive())&&(!game->gameover)){
+        buildTower();
+        game->selectTower=1;
     }
 }
 
@@ -51,4 +44,17 @@ void BuildBlackTowerIcon::hideText(){
     game->blackrange->hide();
     game->blackspeed->hide();
 
+}
+
+void BuildBlackTowerIcon::buildTower()
+{
+    game->building = new BlackTower();
+    game->setCursor(QString(":/images/tower_field_black.png"));
+    game->scene->addItem(game->building);
+
+    QPoint p = game->mapFromGlobal(QCursor::pos());
+    game->building->setPos(p.x()-18,p.y()-18);
+    game->cursor->setPos(p.x()-18,p.y()-18);
+
+    showText();
 }

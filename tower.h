@@ -46,6 +46,7 @@ protected:
     int range[10][2];
 
     int range_number=-1; //total of ranges for this tower
+    int HittableEnemys[500];
 
 };
 

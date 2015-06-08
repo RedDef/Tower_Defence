@@ -23,7 +23,6 @@ public:
       callculated and set by the tower->aquire_target*/
     int steps_to_target;
 
-
 public slots:
     void move(); //function to move the bullet
 

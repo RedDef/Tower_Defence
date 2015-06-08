@@ -17,7 +17,7 @@ Bullet::Bullet(QGraphicsItem *parent){
     //initialize values
     distanceTravalled = 0;
     damage_bullet=1;
-    STEP_SIZE = 7;
+    STEP_SIZE = 15;
     dx=0;
     dy=0;
 
@@ -32,7 +32,13 @@ void Bullet::move(){
     distanceTravalled++;
     setPos(x()+dx,y()+dy);
 
-    if((x()>705)||(x()<15)||(y()>705)||(y()<15)){ //if the bullet is out of the screen delete it
+    if(game->gameover){
+        game->scene->removeItem(this);
+        delete this;
+        return;
+    }
+
+    if((x()>705)||(x()<0)||(y()>705)||(y()<0)){ //if the bullet is out of the screen delete it
         scene()->removeItem(this);
         delete this;
         return;

@@ -20,3 +20,9 @@ void Score::increase(){
 int Score::getScore(){
     return score;
 }
+
+void Score::setScore(int newScore)
+{
+    score=newScore;
+    setPlainText(QString("Score: ") + QString::number(score));
+}

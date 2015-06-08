@@ -9,11 +9,11 @@ extern Game * game;
 
 GreenTower::GreenTower(QGraphicsItem *parent){
 
-    damage=2;
+    damage=5;
     shoot_speed=15;
     SCALE_FACTOR=100;
     setrange();
-    tower_cost = 80; //costs of tower to build
+    tower_cost = 100; //costs of tower to build
     setPixmap(QPixmap(":/images/tower_field_green.png"));
 }
 

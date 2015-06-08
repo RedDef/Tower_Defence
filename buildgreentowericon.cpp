@@ -9,16 +9,9 @@ BuildGreenTowerIcon::BuildGreenTowerIcon(QGraphicsItem *parent):QGraphicsPixmapI
 }
 
 void BuildGreenTowerIcon::mousePressEvent(QGraphicsSceneMouseEvent *event){
-    if((!game->building)&&(game->global_timer->isActive())){
-        game->building = new GreenTower();
-        game->setCursor(QString(":/images/tower_field_green.png"));
-        game->scene->addItem(game->building);
-
-        QPoint p = game->mapFromGlobal(QCursor::pos());
-        game->building->setPos(p.x()-18,p.y()-18);
-        game->cursor->setPos(p.x()-18,p.y()-18);
-
-        showText();
+    if((!game->building)&&(game->global_timer->isActive())&&(!game->gameover)){
+        buildTower();
+        game->selectTower=3;
     }
 }
 
@@ -51,4 +44,17 @@ void BuildGreenTowerIcon::hideText(){
     game->greenrange->hide();
     game->greenspeed->hide();
 
+}
+
+void BuildGreenTowerIcon::buildTower()
+{
+    game->building = new GreenTower();
+    game->setCursor(QString(":/images/tower_field_green.png"));
+    game->scene->addItem(game->building);
+
+    QPoint p = game->mapFromGlobal(QCursor::pos());
+    game->building->setPos(p.x()-18,p.y()-18);
+    game->cursor->setPos(p.x()-18,p.y()-18);
+
+    showText();
 }

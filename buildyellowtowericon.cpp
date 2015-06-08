@@ -9,16 +9,9 @@ BuildYellowTowerIcon::BuildYellowTowerIcon(QGraphicsItem *parent):QGraphicsPixma
 }
 
 void BuildYellowTowerIcon::mousePressEvent(QGraphicsSceneMouseEvent *event){
-    if((!game->building)&&(game->global_timer->isActive())){
-        game->building = new YellowTower();
-        game->setCursor(QString(":/images/tower_field_yellow.png"));
-        game->scene->addItem(game->building);
-
-        QPoint p = game->mapFromGlobal(QCursor::pos());
-        game->building->setPos(p.x()-18,p.y()-18);
-        game->cursor->setPos(p.x()-18,p.y()-18);
-
-        showText();
+    if((!game->building)&&(game->global_timer->isActive())&&(!game->gameover)){
+        buildTower();
+        game->selectTower=6;
     }
 }
 
@@ -51,6 +44,19 @@ void BuildYellowTowerIcon::hideText(){
     game->yellowrange->hide();
     game->yellowspeed->hide();
 
+}
+
+void BuildYellowTowerIcon::buildTower()
+{
+    game->building = new YellowTower();
+    game->setCursor(QString(":/images/tower_field_yellow.png"));
+    game->scene->addItem(game->building);
+
+    QPoint p = game->mapFromGlobal(QCursor::pos());
+    game->building->setPos(p.x()-18,p.y()-18);
+    game->cursor->setPos(p.x()-18,p.y()-18);
+
+    showText();
 }
 
 

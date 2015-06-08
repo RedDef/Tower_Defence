@@ -7,11 +7,11 @@ extern Game * game;
 
 WhiteTower::WhiteTower(QGraphicsItem *parent){
 
-    shoot_speed=10;
-    damage=1;
-    SCALE_FACTOR=100;
+    shoot_speed=15;
+    damage=30;
+    SCALE_FACTOR=80;
     setrange();
-    tower_cost = 300; //costs of tower to build
+    tower_cost = 1500; //costs of tower to build
     setPixmap(QPixmap(":/images/tower_field_white.png"));
 
 }
@@ -35,7 +35,7 @@ void WhiteTower::fire(){
     bullet3->setPixmap(QPixmap(":/images/arrow_green.png"));
     bullet4->setPixmap(QPixmap(":/images/arrow_red.png"));
     bullet5->setPixmap(QPixmap(":/images/arrow_yellow.png"));
-    bullet5->setPixmap(QPixmap(":/images/arrow_yellow.png"));
+    bullet6->setPixmap(QPixmap(":/images/arrow_green.png"));
 
     //set position
     bullet1->setPos(x()+10, y()+10);

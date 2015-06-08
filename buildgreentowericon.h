@@ -16,6 +16,7 @@ public:
     void setIcon(bool status);
     void showText();
     void hideText();
+    void buildTower();
 
 private:
     bool old_icon=true;

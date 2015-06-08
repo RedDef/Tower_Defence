@@ -7,11 +7,11 @@ extern Game * game;
 
 BlackTower::BlackTower(QGraphicsItem *parent){
 
-    shoot_speed=50;
-    damage=500;
-    SCALE_FACTOR=100;
+    shoot_speed=20;
+    damage=100;
+    SCALE_FACTOR=80;
     setrange();
-    tower_cost = 350; //costs of tower to build
+    tower_cost = 3500; //costs of tower to build
     setPixmap(QPixmap(":/images/tower_field_black.png"));
 
 }

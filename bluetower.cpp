@@ -8,10 +8,10 @@ extern Game * game;
 BlueTower::BlueTower(QGraphicsItem *parent){
 
     shoot_speed=10;
-    damage=1;
-    SCALE_FACTOR=100;
+    damage=10;
+    SCALE_FACTOR=150;
     setrange();
-    tower_cost = 100; //costs of tower to build
+    tower_cost = 300; //costs of tower to build
     setPixmap(QPixmap(":/images/tower_field_blue.png"));
 
 }

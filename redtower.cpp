@@ -8,11 +8,11 @@ extern Game * game;
 
 RedTower::RedTower(QGraphicsItem *parent){
 
-    shoot_speed=1;
+    shoot_speed=5;
     damage=1;
-    SCALE_FACTOR=400;
+    SCALE_FACTOR=180;
     setrange();
-    tower_cost = 30; //costs of tower to build
+    tower_cost = 50; //costs of tower to build
 
     setPixmap(QPixmap(":/images/tower_field_red.png"));
 
